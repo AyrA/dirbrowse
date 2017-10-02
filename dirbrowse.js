@@ -11,7 +11,7 @@ const parseUrl = require("parseurl");
 //IP Matching
 const ipcheck = require("./lib/ip.js");
 //Argument parser
-const getArguments = require("./lib/args.js");
+const argParse = require("./lib/args.js");
 //Configuration
 const config = require("./lib/config.js");
 
@@ -33,7 +33,7 @@ const numCPUs = require("os").cpus().length;
 const customdir = path.join(path.dirname(process.argv[1]), '~');
 
 //Command line arguments
-var args = getArguments();
+var args = argParse.getArguments();
 
 if (typeof(args) == typeof("")) {
 	console.error("Error parsing command line arguments:", args);
@@ -206,19 +206,6 @@ function request(req, res) {
 	}
 }
 
-//Checks if help was requested
-function isHelp() {
-	return (
-		//Linux
-		process.argv.indexOf("--help") >= 0 ||
-		//Linux
-		process.argv.indexOf("-h") >= 0 ||
-		//Sometimes Windows
-		process.argv.indexOf("-?") >= 0 ||
-		//Windows
-		process.argv.indexOf("/?") >= 0);
-}
-
 function numToCPU(x) {
 	if (isNaN(x)) {
 		//Safety override
@@ -298,7 +285,7 @@ config.load(function (e, data) {
 			console.log("WARN: Using unencrypted HTTPS");
 		}
 
-		if (!isHelp()) {
+		if (!argParse.isHelp()) {
 			console.log("Starting Listener on http" + (args.key && args.cert ? "s" : "") + "://" + args.ip + ":" + args.port);
 			//Show when a worker comes online
 			cluster.on("online", function (worker) {
@@ -322,28 +309,7 @@ config.load(function (e, data) {
 			}
 		} else {
 			console.error("Command line: " + path.basename(process.argv[0]) + " " + path.basename(process.argv[1]) + " [root] [-s IP:port] [-w procs] [-k key cert] [-d]");
-			console.error([
-					"root  - Root directory to list",
-					"-s    - Serve from this local IP and port",
-					"-w    - Number of worker processes",
-					"-k    - Serve using TLS. First argument is private key, second argument is certificate",
-					"-d    - Force file downloads. If not specified it is up to the browser to decide",
-					"",
-					"Any unspecified value defaults to what config.json defines",
-					"config.json is created if it doesn't exists",
-					"",
-					"Workers",
-					"=======",
-					"Workers are specified as a number that is treated this way:",
-					"Negative: This tells the system how many cores to not occupy",
-					"0:        Use as many workers as there are CPU cores (default)",
-					"Positive: Use this many workers. If you try to specify more than 4 times the CPU count, it will abort. To override, prefix the number with '!'",
-					"",
-					"About key security",
-					"==================",
-					"Be sure that the key is not accessible from a subdirectory of 'root' or a visitor could download it.",
-					"If you run this as a service, an easy way to achieve it is to copy the key to a directory this instance can acces and after it is started, removing the key file again."]
-				.join("\n"));
+			console.error(argParse.getHelp());
 		}
 	} else {
 		try {
