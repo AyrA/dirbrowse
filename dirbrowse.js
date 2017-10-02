@@ -145,7 +145,6 @@ function request(req, res) {
 
 		fs.stat(urlpath, function (e, x) {
 			if (!e) {
-				//console.log("#" + cluster.worker.id, IP, decodeURIComponent(req.url));
 				if (x.isDirectory()) {
 					//Show Directory
 					listDir(urlpath, requestdir, IP, function (e, x) {
