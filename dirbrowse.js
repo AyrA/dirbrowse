@@ -330,6 +330,7 @@ config.load(function (e, data) {
 					"-d    - Force file downloads. If not specified it is up to the browser to decide",
 					"",
 					"Any unspecified value defaults to what config.json defines",
+					"config.json is created if it doesn't exists",
 					"",
 					"Workers",
 					"=======",
