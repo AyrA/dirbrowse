@@ -231,8 +231,7 @@ function numToCPU(x) {
 	//negative workers tell the system how many CPU cores *not* to use
 	else if (x === 0) {
 		return numCPUs;
-	}
-	else if (x < 0) {
+	} else if (x < 0) {
 		if (numCPUs + x < 1) {
 			return null;
 		} else {
@@ -289,6 +288,15 @@ config.load(function (e, data) {
 
 	if (cluster.isMaster) {
 		console.log("Simple HTTP Directory browser with range support");
+		
+		console.log("INFO: Root Directory:",args.root);
+		
+		if (!ipcheck.enabled) {
+			console.log("WARN: IP restriction is disabled");
+		}
+		if (!args.key) {
+			console.log("WARN: Using unencrypted HTTPS");
+		}
 
 		if (!isHelp()) {
 			console.log("Starting Listener on http" + (args.key && args.cert ? "s" : "") + "://" + args.ip + ":" + args.port);
@@ -307,7 +315,7 @@ config.load(function (e, data) {
 				}
 			});
 
-			console.log("starting",args.workers,"workers");
+			console.log("starting", args.workers, "workers");
 			// Fork workers
 			for (var i = 0; i < args.workers; i++) {
 				cluster.fork();
