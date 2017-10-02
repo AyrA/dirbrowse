@@ -1,0 +1,22 @@
+{
+  "name": "dirbrowse",
+  "version": "1.0.0",
+  "description": "Directory Browser with Partial range support",
+  "main": "dirbrowse.js",
+  "dependencies": {
+    "ip-range-check": "0.0.2",
+    "mime-types": "^2.1.16",
+    "parseurl": "^1.3.2",
+    "send": "^0.16.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "server": "node dirbrowse.js"
+  },
+  "keywords": [
+    "directory",
+	"browser"
+  ],
+  "author": "/u/AyrA_ch",
+  "license": "MIT"
+}

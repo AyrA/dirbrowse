@@ -1,0 +1,27 @@
+.container{
+	margin-bottom:200px;
+}
+
+.dir-link,.file-link{
+	display:block;
+	float:left;
+	width:33%;
+	font-family:monospace;
+}
+
+.dir-link{
+	color:#D00;
+}
+
+.dir-link::before{
+	content:"["
+}
+
+.dir-link::after{
+	content:"]"
+}
+
+i.info{
+	color:#AAA;
+	font-size:8pt;
+}
