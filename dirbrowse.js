@@ -324,19 +324,22 @@ config.load(function (e, data) {
 
 			//check if HTTPS
 			if (args.key && args.cert) {
-				https.createServer({
-					key: args.key,
-					cert: args.cert
-				}, request).listen(args.port, args.ip).on("error", function (e) {
-					console.error("Unable to start listener. Error:", e.message);
-					process.exit(0);
-				});
+				//Create encrypted HTTPS server
+				var server = https.createServer({
+						key: args.key,
+						cert: args.cert
+					}, request).listen(args.port, args.ip).on("error", function (e) {
+						console.error("Unable to start listener. Error:", e.message);
+						process.exit(0);
+					});
+				server.timeout = 0;
 			} else {
 				//Create unencrypted HTTP server
-				http.createServer(request).listen(args.port, args.ip).on("error", function (e) {
-					console.error("Unable to start listener. Error:", e.message);
-					process.exit(0);
-				});
+				var server = http.createServer(request).listen(args.port, args.ip).on("error", function (e) {
+						console.error("Unable to start listener. Error:", e.message);
+						process.exit(0);
+					});
+				server.timeout = 0;
 			}
 		} catch (e) {
 			console.error("Unable to start listener. Error:", e.message);
