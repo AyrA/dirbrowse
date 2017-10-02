@@ -32,12 +32,20 @@ const numCPUs = require("os").cpus().length;
 //Custom Files Directory
 const customdir = path.join(path.dirname(process.argv[1]), '~');
 
+//Check for help before anything else.
+if (argParse.isHelp()) {
+	console.error("Command line: " + path.basename(process.argv[0]) + " " + path.basename(process.argv[1]) + " [root] [-s IP:port] [-w procs] [-k key cert] [-d]");
+	console.error(argParse.getHelp());
+	process.exit(0);
+}
+
 //Command line arguments
 var args = argParse.getArguments();
 
+//If args is a string, it's an error message
 if (typeof(args) == typeof("")) {
 	console.error("Error parsing command line arguments:", args);
-	console.error("Use --help for more information");
+	console.error("Use --help for command line details");
 	process.exit(1);
 }
 
@@ -275,9 +283,9 @@ config.load(function (e, data) {
 
 	if (cluster.isMaster) {
 		console.log("Simple HTTP Directory browser with range support");
-		
-		console.log("INFO: Root Directory:",args.root);
-		
+
+		console.log("INFO: Root Directory:", args.root);
+
 		if (!ipcheck.enabled) {
 			console.log("WARN: IP restriction is disabled");
 		}
@@ -285,34 +293,30 @@ config.load(function (e, data) {
 			console.log("WARN: Using unencrypted HTTPS");
 		}
 
-		if (!argParse.isHelp()) {
-			console.log("Starting Listener on http" + (args.key && args.cert ? "s" : "") + "://" + args.ip + ":" + args.port);
-			//Show when a worker comes online
-			cluster.on("online", function (worker) {
-				console.log("worker", worker.id, "started");
-			});
-			//Show when a worker exits
-			cluster.on("exit", function (worker, code, signal) {
-				//Treat non-zero code as unexpected exit and restart worker
-				if (code !== 0) {
-					console.error("worker", worker.id, "died without 'success' code. Signal:", signal);
-					setTimeout(cluster.fork, 500);
-				} else {
-					console.log("Worker", worker.id, "stopped gracefully");
-				}
-			});
-
-			console.log("starting", args.workers, "workers");
-			// Fork workers
-			for (var i = 0; i < args.workers; i++) {
-				cluster.fork();
+		console.log("Starting Listener on http" + (args.key && args.cert ? "s" : "") + "://" + args.ip + ":" + args.port);
+		//Show when a worker comes online
+		cluster.on("online", function (worker) {
+			console.log("worker", worker.id, "started");
+		});
+		//Show when a worker exits
+		cluster.on("exit", function (worker, code, signal) {
+			//Treat non-zero code as unexpected exit and restart worker
+			if (code !== 0) {
+				console.error("worker", worker.id, "died without 'success' code. Signal:", signal);
+				setTimeout(cluster.fork, 500);
+			} else {
+				console.log("Worker", worker.id, "stopped gracefully");
 			}
-		} else {
-			console.error("Command line: " + path.basename(process.argv[0]) + " " + path.basename(process.argv[1]) + " [root] [-s IP:port] [-w procs] [-k key cert] [-d]");
-			console.error(argParse.getHelp());
+		});
+
+		console.log("starting", args.workers, "workers");
+		// Fork workers
+		for (var i = 0; i < args.workers; i++) {
+			cluster.fork();
 		}
 	} else {
 		try {
+			//Try to apply TLS defaults
 			if (!args.key && data.server.tls) {
 				args.key = fs.readFileSync(data.server.key);
 				args.cert = fs.readFileSync(data.server.cert);
@@ -328,6 +332,7 @@ config.load(function (e, data) {
 					process.exit(0);
 				});
 			} else {
+				//Create unencrypted HTTP server
 				http.createServer(request).listen(args.port, args.ip).on("error", function (e) {
 					console.error("Unable to start listener. Error:", e.message);
 					process.exit(0);
