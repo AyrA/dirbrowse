@@ -107,3 +107,13 @@ Range Support
 
 This Server supports Range Requests.
 This allows for proper Media streaming in Browsers and for Resumption of interrupted Downloads.
+
+Installation
+------------
+
+Simply `npm install`
+
+License
+-------
+
+MIT
