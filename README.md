@@ -16,6 +16,8 @@ Command Line
 	Any unspecified value defaults to what config.json defines
 	config.json is created if it doesn't exists
 
+This help can also be obtained by using the Argument `--help`, `-h`, `-?`, or `/?`
+
 Features
 --------
 
@@ -118,7 +120,14 @@ This allows for proper Media streaming in Browsers and for Resumption of interru
 Installation
 ------------
 
-Simply `npm install`
+	npm install
+
+Running
+-------
+
+	npm run server
+	--OR--
+	node dirbrowse.js
 
 License
 -------
