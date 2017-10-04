@@ -332,14 +332,8 @@ config.load(function (err, data) {
 			cluster.fork();
 		}
 	} else {
+		var server = null;
 		try {
-			//Try to apply TLS defaults
-			if (!args.key && data.server.tls) {
-				args.key = fs.readFileSync(data.server.key);
-				args.cert = fs.readFileSync(data.server.cert);
-			}
-
-			var server;
 
 			//check if HTTPS
 			if (args.key && args.cert) {
@@ -351,13 +345,12 @@ config.load(function (err, data) {
 			} else {
 				//Create unencrypted HTTP server
 				server = http.createServer(request);
-				server.timeout = 0;
 			}
+			server.timeout = 0;
 			server.listen(args.port, args.ip).on("error", function (err) {
 				console.error("Unable to start listener. Error:", err.message);
 				process.exit(0);
 			});
-			server.timeout = 0;
 		} catch (err) {
 			console.error("Unable to start listener. Error:", err.message);
 			process.exit(0);
