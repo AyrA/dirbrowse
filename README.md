@@ -30,7 +30,14 @@ TLS
 ---
 
 To use TLS you need a key and a certificate in PEM format.
-All links on pages delivered to the visitor are relative. This allows dirbrowse to run behind a reverse proxy that does SSL offloading
+All links on pages delivered to the visitor are relative.
+This allows dirbrowse to run behind a reverse proxy that does SSL offloading.
+
+WARNING
+=======
+
+Whenever you share a directory make sure that no subdirectory contains files you don't want others to see.
+For example ensure that the configured TLS certificate for HTTPS is not accessible.
 
 IP check
 --------
