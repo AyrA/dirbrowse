@@ -69,11 +69,7 @@ function listDir(directory, url, ip, cb) {
 		if (!e) {
 			var text = "<a class='dir-link dir-up' href='..'>..</a><br />";
 			for (var key in x) {
-				if (x[key].isDirectory()) {
-					text += "<a class='dir-link' href='" + encodeURIComponent(key) + "/'>" + key + "</a>";
-				} else {
-					text += "<a class='file-link' href='" + encodeURIComponent(key) + "'>" + key + "</a>";
-				}
+				text += "<a class='"+(x[key].isDirectory()?"dir":"file")+"-link' href='" + encodeURIComponent(key) + "/'>" + key + "</a>";
 			}
 			cb(null, pages.dir.replace(/\[ROOT\]/g, "/" + url).replace(/\[CLUSTER\]/g, cluster.worker.id).replace(/\[IP\]/g, ip).replace(/\[BODY\]/g, text));
 		} else {
