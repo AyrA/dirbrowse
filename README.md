@@ -49,7 +49,7 @@ An IP Address File can be provided with Lines in this Format:
     {IP}/{Mask}\t{Comment}\t{Expiration}
 	
 	IP          - IP Address
-	Mask        - Netmask. For single IP Addresses this is /23 for IPv4 and /128 for IPv6
+	Mask        - Netmask. For single IP Addresses this is /32 for IPv4 and /128 for IPv6
 	Comment     - Comment that describes the Entry.
 	Expiration  - Unix Timestamp of Expiration. A Timestamp of 0 means it never expires
 
